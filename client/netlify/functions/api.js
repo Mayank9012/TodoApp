@@ -82,6 +82,16 @@ app.get('/api/tasks', async (req, res) => {
   }
 });
 
+// Health / root endpoint so visiting /api returns a friendly message
+app.get('/api', (req, res) => {
+  const hasMongoUri = !!process.env.MONGODB_URI;
+  res.json({
+    ok: true,
+    message: 'API function is running',
+    mongodbConfigured: hasMongoUri
+  });
+});
+
 app.get('/api/tasks/:id', async (req, res) => {
   await connectToDatabase();
   
