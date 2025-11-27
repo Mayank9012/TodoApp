@@ -1,0 +1,75 @@
+.week-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.week-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.week-card.selected {
+  border: 2px solid #5a67d8;
+}
+
+.week-header {
+  margin-bottom: 16px;
+}
+
+.week-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.week-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #666;
+}
+
+.week-tasks {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.week-task-item {
+  padding: 8px 0;
+}
+
+.week-task-item .task-title {
+  font-size: 14px;
+  color: #333;
+}
+
+.week-task-item .task-title.completed {
+  text-decoration: line-through;
+  color: #999;
+}
