@@ -8,6 +8,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Normalize path when Netlify invokes the function: requests may include
+// '/.netlify/functions/api' as a prefix (e.g. '/.netlify/functions/api/tasks').
+// Strip that prefix so our Express routes like '/api/tasks' or '/tasks' match.
+app.use((req, res, next) => {
+  const prefix = '/.netlify/functions/api';
+  if (req.url && req.url.startsWith(prefix)) {
+    req.url = req.url.replace(prefix, '');
+  }
+  next();
+});
+
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/todoapp';
 
 let isConnected = false;
