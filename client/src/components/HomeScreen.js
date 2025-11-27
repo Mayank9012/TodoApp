@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTasks } from '../services/api';
-import { startOfWeek, endOfWeek, format, parseISO, addDays } from 'date-fns';
+import { startOfWeek, endOfWeek, format, addDays } from 'date-fns';
 import { IoSettingsOutline, IoSearchOutline, IoNotificationsOutline, IoAddOutline, IoCreateOutline, IoTrashOutline } from 'react-icons/io5';
 import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
 import TaskModal from './TaskModal';
@@ -62,8 +62,9 @@ function HomeScreen() {
 
   const daysOfWeek = Array.from({ length: 7 }).map((_, i) => addDays(weekStart, i));
 
-  const goPrevWeek = () => setSelectedDate(addDays(weekStart, -7));
-  const goNextWeek = () => setSelectedDate(addDays(weekStart, 7));
+  // week navigation helpers (kept for future UI controls)
+  // const goPrevWeek = () => setSelectedDate(addDays(weekStart, -7));
+  // const goNextWeek = () => setSelectedDate(addDays(weekStart, 7));
 
   const tasksForSelectedDate = tasks.filter((task) => {
     try {
