@@ -59,7 +59,8 @@ const taskSchema = new mongoose.Schema({
 
 const Task = mongoose.models.Task || mongoose.model('Task', taskSchema);
 
-app.get('/api/tasks', async (req, res) => {
+// Support both '/api/tasks' and '/tasks' so Netlify function routing works
+const listTasksHandler = async (req, res) => {
   await connectToDatabase();
   
   try {
@@ -80,7 +81,10 @@ app.get('/api/tasks', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-});
+};
+
+app.get('/api/tasks', listTasksHandler);
+app.get('/tasks', listTasksHandler);
 
 // Health / root endpoint so visiting /api returns a friendly message
 app.get('/api', (req, res) => {
@@ -92,7 +96,7 @@ app.get('/api', (req, res) => {
   });
 });
 
-app.get('/api/tasks/:id', async (req, res) => {
+const getTaskHandler = async (req, res) => {
   await connectToDatabase();
   
   try {
@@ -104,9 +108,12 @@ app.get('/api/tasks/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-});
+};
 
-app.post('/api/tasks', async (req, res) => {
+app.get('/api/tasks/:id', getTaskHandler);
+app.get('/tasks/:id', getTaskHandler);
+
+const createTaskHandler = async (req, res) => {
   await connectToDatabase();
   
   const task = new Task({
@@ -123,9 +130,12 @@ app.post('/api/tasks', async (req, res) => {
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
-});
+};
 
-app.put('/api/tasks/:id', async (req, res) => {
+app.post('/api/tasks', createTaskHandler);
+app.post('/tasks', createTaskHandler);
+
+const updateTaskHandler = async (req, res) => {
   await connectToDatabase();
   
   try {
@@ -145,9 +155,12 @@ app.put('/api/tasks/:id', async (req, res) => {
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
-});
+};
 
-app.delete('/api/tasks/:id', async (req, res) => {
+app.put('/api/tasks/:id', updateTaskHandler);
+app.put('/tasks/:id', updateTaskHandler);
+
+const deleteTaskHandler = async (req, res) => {
   await connectToDatabase();
   
   try {
@@ -160,6 +173,9 @@ app.delete('/api/tasks/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-});
+};
+
+app.delete('/api/tasks/:id', deleteTaskHandler);
+app.delete('/tasks/:id', deleteTaskHandler);
 
 module.exports.handler = serverless(app);
