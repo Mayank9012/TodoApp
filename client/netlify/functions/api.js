@@ -8,9 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Normalize path when Netlify invokes the function: requests may include
-// '/.netlify/functions/api' as a prefix (e.g. '/.netlify/functions/api/tasks').
-// Strip that prefix so our Express routes like '/api/tasks' or '/tasks' match.
+
 app.use((req, res, next) => {
   const prefix = '/.netlify/functions/api';
   if (req.url && req.url.startsWith(prefix)) {
@@ -29,12 +27,16 @@ const connectToDatabase = async () => {
   }
 
   try {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
     isConnected = true;
     console.log('Connected to MongoDB');
   } catch (err) {
-    console.error('MongoDB connection error:', err);
-    throw err;
+    console.error('MongoDB connection error:', err.message);
+    console.error('MONGODB_URI configured:', !!process.env.MONGODB_URI);
+    throw new Error(`Database connection failed: ${err.message}`);
   }
 };
 
@@ -67,7 +69,6 @@ const taskSchema = new mongoose.Schema({
 
 const Task = mongoose.models.Task || mongoose.model('Task', taskSchema);
 
-// Support both '/api/tasks' and '/tasks' so Netlify function routing works
 const listTasksHandler = async (req, res) => {
   await connectToDatabase();
   
@@ -94,7 +95,6 @@ const listTasksHandler = async (req, res) => {
 app.get('/api/tasks', listTasksHandler);
 app.get('/tasks', listTasksHandler);
 
-// Health / root endpoint so visiting /api returns a friendly message
 app.get('/api', (req, res) => {
   const hasMongoUri = !!process.env.MONGODB_URI;
   res.json({

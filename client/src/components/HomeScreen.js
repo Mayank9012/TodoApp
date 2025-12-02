@@ -62,10 +62,6 @@ function HomeScreen() {
 
   const daysOfWeek = Array.from({ length: 7 }).map((_, i) => addDays(weekStart, i));
 
-  // week navigation helpers (kept for future UI controls)
-  // const goPrevWeek = () => setSelectedDate(addDays(weekStart, -7));
-  // const goNextWeek = () => setSelectedDate(addDays(weekStart, 7));
-
   const tasksForSelectedDate = tasks.filter((task) => {
     try {
       const taskDate = new Date(task.dateTime);
